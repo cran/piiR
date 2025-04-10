@@ -1,0 +1,43 @@
+---
+title: "Getting Started with piiR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with piiR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## What is the Predictive Information Index (PII)?
+
+The Predictive Information Index (PII) quantifies how much outcome-relevant information is retained when reducing a set of predictors (e.g., items) to a composite score.
+
+PII is defined as:
+
+```math
+\text{PII} = 1 - \frac{\text{Var}(\hat{Y}_{\text{Full}} - \hat{Y}_{\text{Score}})}{\text{Var}(\hat{Y}_{\text{Full}})}
+```
+
+Where:
+- \( \hat{Y}_{\text{Full}} \): predictions from a full model (e.g., all items or predictors)
+- \( \hat{Y}_{\text{Score}} \): predictions from a reduced score (e.g., mean or sum)
+
+A PII of 1 means no predictive information was lost. A PII near 0 means the score loses most predictive information.
+
+## Example: Using `pii()`
+
+```{r}
+library(piiR)
+
+# Simulate two prediction vectors
+set.seed(123)
+full_model_preds <- rnorm(100)
+score_based_preds <- full_model_preds + rnorm(100, sd = 0.5)
+
+# Compute PII
+pii(full_model_preds, score_based_preds)
+```
+
