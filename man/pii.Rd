@@ -4,14 +4,16 @@
 \alias{pii}
 \title{Predictive Information Index (PII)}
 \usage{
-pii(full_preds, score_preds, type = c("r2", "rm", "v"))
+pii(y, score_pred, full_pred = NULL, type = c("r2", "rm", "v"))
 }
 \arguments{
-\item{full_preds}{Predicted values from the full (benchmark) model.}
+\item{y}{Observed outcome vector.}
 
-\item{score_preds}{Predicted values from the score-based model.}
+\item{score_pred}{Predictions from score-based model.}
 
-\item{type}{Type of PII to compute: "r2", "rm", or "v".}
+\item{full_pred}{Predictions from the full model.}
+
+\item{type}{Character. One of "r2", "rm", or "v".}
 }
 \value{
 A numeric value between 0 and 1.
@@ -21,7 +23,11 @@ Computes the Predictive Information Index using one of three methods:
 "r2" (R-squared ratio), "rm" (RMSE-based), or "v" (variance ratio).
 }
 \examples{
-full <- rnorm(100)
-score <- full + rnorm(100, sd = 0.5)
-pii(full, score, type = "rm")
+set.seed(1)
+y     <- rnorm(100)
+full  <- y + rnorm(100, sd = 0.3)
+score <- y + rnorm(100, sd = 0.5)
+pii(y, score, full, type = "r2")
+pii(y, score, full, type = "rm")
+pii(y, score, full, type = "v")
 }

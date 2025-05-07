@@ -345,8 +345,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>The Predictive Information Index (PII) quantifies how much
 outcome-relevant information is retained when reducing a set of
 predictors (e.g., items) to a composite score.</p>
-<p>PII is defined as:</p>
-<pre class="math"><code>\text{PII} = 1 - \frac{\text{Var}(\hat{Y}_{\text{Full}} - \hat{Y}_{\text{Score}})}{\text{Var}(\hat{Y}_{\text{Full}})}</code></pre>
+<p>One version of PII, the <strong>variance-based form</strong>, is
+defined as:</p>
+<pre class="math"><code>\text{PII}_{v} = 1 - \frac{\text{Var}(\hat{Y}_{\text{Full}} - \hat{Y}_{\text{Score}})}{\text{Var}(\hat{Y}_{\text{Full}})}
+</code></pre>
 <p>Where: - <span class="math inline">\(\hat{Y}_{\text{Full}}\)</span>:
 predictions from a full model (e.g., all items or predictors) - <span class="math inline">\(\hat{Y}_{\text{Score}}\)</span>: predictions from
 a reduced score (e.g., mean or sum)</p>
@@ -357,14 +359,19 @@ means the score loses most predictive information.</p>
 <h2>Example: Using <code>pii()</code></h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(piiR)</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Simulate two prediction vectors</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Simulate an outcome and two prediction vectors</span></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>full_model_preds <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>score_based_preds <span class="ot">&lt;-</span> full_model_preds <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">sd =</span> <span class="fl">0.5</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co"># Compute PII</span></span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="fu">pii</span>(full_model_preds, score_based_preds)</span></code></pre></div>
-<pre><code>## [1] 0.7721124</code></pre>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>y     <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)                        <span class="co"># observed outcome</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>full  <span class="ot">&lt;-</span> y <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">sd =</span> <span class="fl">0.3</span>)          <span class="co"># full-model predictions</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>score <span class="ot">&lt;-</span> y <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">sd =</span> <span class="fl">0.5</span>)          <span class="co"># score-based predictions</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co"># Compute the three PII variants</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="fu">pii</span>(y, score, full, <span class="at">type =</span> <span class="st">&quot;r2&quot;</span>)  <span class="co"># variance explained</span></span></code></pre></div>
+<pre><code>## [1] 0.7248883</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">pii</span>(y, score, full, <span class="at">type =</span> <span class="st">&quot;rm&quot;</span>)  <span class="co"># RMSE ratio</span></span></code></pre></div>
+<pre><code>## [1] -1.690292</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">pii</span>(y, score, full, <span class="at">type =</span> <span class="st">&quot;v&quot;</span>)   <span class="co"># variance ratio</span></span></code></pre></div>
+<pre><code>## [1] 0.6619032</code></pre>
 </div>
 
 

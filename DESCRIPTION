@@ -1,7 +1,7 @@
 Package: piiR
 Type: Package
 Title: Predictive Information Index ('PII')
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: person(given = c("Kevin", "E."),
                   family = "Wells",
                   role = c("aut", "cre"),
@@ -16,7 +16,7 @@ VignetteBuilder: knitr
 Suggests: knitr, rmarkdown
 RoxygenNote: 7.3.2
 NeedsCompilation: no
-Packaged: 2025-04-09 16:42:19 UTC; w10105397
+Packaged: 2025-05-07 17:51:17 UTC; w10105397
 Author: Kevin E. Wells [aut, cre]
 Repository: CRAN
-Date/Publication: 2025-04-10 14:30:08 UTC
+Date/Publication: 2025-05-07 18:10:02 UTC

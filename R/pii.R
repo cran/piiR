@@ -3,33 +3,39 @@
 #' Computes the Predictive Information Index using one of three methods:
 #' "r2" (R-squared ratio), "rm" (RMSE-based), or "v" (variance ratio).
 #'
-#' @param full_preds Predicted values from the full (benchmark) model.
-#' @param score_preds Predicted values from the score-based model.
-#' @param type Type of PII to compute: "r2", "rm", or "v".
+#' @param y Observed outcome vector.
+#' @param score_pred Predictions from score-based model.
+#' @param full_pred Predictions from the full model.
+#' @param type Character. One of "r2", "rm", or "v".
 #' @importFrom stats var median aggregate cor
 #' @importFrom infotheo entropy mutinformation
 #' @return A numeric value between 0 and 1.
 #' @examples
-#' full <- rnorm(100)
-#' score <- full + rnorm(100, sd = 0.5)
-#' pii(full, score, type = "rm")
+#' set.seed(1)
+#' y     <- rnorm(100)
+#' full  <- y + rnorm(100, sd = 0.3)
+#' score <- y + rnorm(100, sd = 0.5)
+#' pii(y, score, full, type = "r2")
+#' pii(y, score, full, type = "rm")
+#' pii(y, score, full, type = "v")
 #' @export
-pii <- function(full_preds, score_preds, type = c("r2", "rm", "v")) {
+pii <- function(y, score_pred, full_pred = NULL, type = c("r2", "rm", "v")) {
   type <- match.arg(type)
   
   if (type == "r2") {
-    r2_score <- cor(full_preds, score_preds)^2
-    r2_full <- 1
-    return(r2_score / r2_full)
+    mse_score <- mean((y - score_pred)^2)
+    mse_null  <- mean((y - mean(y))^2)
+    return(1 - mse_score / mse_null)
   }
   
   if (type == "rm") {
-    return(1 - var(full_preds - score_preds) / var(full_preds))
+    if (is.null(full_pred))
+      stop("type = 'rm' needs full_pred.")
+    rmse <- function(a,b) sqrt(mean((a-b)^2))
+    return(1 - rmse(y, score_pred)^2 / rmse(y, full_pred)^2)
   }
-
+  
   if (type == "v") {
-    return(var(score_preds) / var(full_preds))
+    return(1 - var(full_pred - score_pred) / var(full_pred))
   }
-
-  stop("Invalid PII type.")
 }

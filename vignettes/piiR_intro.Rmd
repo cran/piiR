@@ -15,10 +15,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 The Predictive Information Index (PII) quantifies how much outcome-relevant information is retained when reducing a set of predictors (e.g., items) to a composite score.
 
-PII is defined as:
+One version of PII, the **variance-based form**, is defined as:
 
 ```math
-\text{PII} = 1 - \frac{\text{Var}(\hat{Y}_{\text{Full}} - \hat{Y}_{\text{Score}})}{\text{Var}(\hat{Y}_{\text{Full}})}
+\text{PII}_{v} = 1 - \frac{\text{Var}(\hat{Y}_{\text{Full}} - \hat{Y}_{\text{Score}})}{\text{Var}(\hat{Y}_{\text{Full}})}
+
 ```
 
 Where:
@@ -32,12 +33,15 @@ A PII of 1 means no predictive information was lost. A PII near 0 means the scor
 ```{r}
 library(piiR)
 
-# Simulate two prediction vectors
+# Simulate an outcome and two prediction vectors
 set.seed(123)
-full_model_preds <- rnorm(100)
-score_based_preds <- full_model_preds + rnorm(100, sd = 0.5)
+y     <- rnorm(100)                        # observed outcome
+full  <- y + rnorm(100, sd = 0.3)          # full-model predictions
+score <- y + rnorm(100, sd = 0.5)          # score-based predictions
 
-# Compute PII
-pii(full_model_preds, score_based_preds)
+# Compute the three PII variants
+pii(y, score, full, type = "r2")  # variance explained
+pii(y, score, full, type = "rm")  # RMSE ratio
+pii(y, score, full, type = "v")   # variance ratio
 ```
 
