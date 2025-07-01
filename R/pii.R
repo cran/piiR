@@ -8,7 +8,6 @@
 #' @param full_pred Predictions from the full model.
 #' @param type Character. One of "r2", "rm", or "v".
 #' @importFrom stats var median aggregate cor
-#' @importFrom infotheo entropy mutinformation
 #' @return A numeric value between 0 and 1.
 #' @examples
 #' set.seed(1)
